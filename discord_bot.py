@@ -24,7 +24,7 @@ def escape_discord_formatting_characters(text: str):
     return re.sub(r'([-\\*_#|~:@[\]()<>`])', r'\\\1', text)
 
 
-async def format_game(game):
+def format_game(game):
     embed = {
         "type": "rich",
         "title": game['id'].upper(),
@@ -119,35 +119,17 @@ async def format_game(game):
     return embed
 
 
-async def update_status_message():
-    global current_online
-    global global_channel
-    global global_online_list_message
-    if global_online_list_message is not None:
-        try:
-            await global_online_list_message.delete()
-        except discord.errors.NotFound:
-            pass
-        global_online_list_message = None
-    text = 'There are currently **' + str(current_online) + '** public games.'
-    if current_online == 1:
-        text = 'There is currently **' + str(current_online) + '** public game.'
-    assert isinstance(global_channel, discord.TextChannel)
-    global_online_list_message = await global_channel.send(text)
-
-
 async def update_game_message(game_id):
     global global_channel
-    text = format_game(game_list[game_id])
+    embed_data = format_game(game_list[game_id])
+    embed = discord.Embed.from_dict(embed_data)
     if 'message' in game_list[game_id]:
-        if game_list[game_id]['message'].content != text:
-            try:
-                await game_list[game_id]['message'].edit(content=text)
-            except discord.errors.NotFound:
-                pass
+        try:
+            await game_list[game_id]['message'].edit(embed=embed)
+        except discord.errors.NotFound:
+            pass
         return
-    assert isinstance(global_channel, discord.TextChannel)
-    game_list[game_id]['message'] = await global_channel.send(text)
+    game_list[game_id]['message'] = await global_channel.send(embed=embed)
 
 
 def format_time_delta(minutes):
@@ -282,7 +264,6 @@ async def background_task():
                 continue
 
             current_online = len(game_list)
-            await update_status_message()
 
             activity = discord.Activity(name='Games online: '+str(current_online), type=discord.ActivityType.watching)
             await client.change_presence(activity=activity)
