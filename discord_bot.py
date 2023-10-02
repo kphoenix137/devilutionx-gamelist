@@ -24,80 +24,99 @@ def escape_discord_formatting_characters(text: str):
     return re.sub(r'([-\\*_#|~:@[\]()<>`])', r'\\\1', text)
 
 
-def format_game(game):
-    global gameTTL
-    ended = time.time() - game['last_seen'] >= gameTTL
-    if ended:
-        text = '~~' + game['id'].upper() + '~~'
-    else:
-        text = '**' + game['id'].upper() + '**'
-    match game['type']:
-        case 'DRTL':
-            text += ' <:diabloico:760201452957335552>'
-        case 'DSHR':
-            text += ' <:diabloico:760201452957335552> (spawn)'
-        case 'HRTL':
-            text += ' <:hellfire:766901810580815932>'
-        case 'HSHR':
-            text += ' <:hellfire:766901810580815932> (spawn)'
-        case 'IRON':
-            text += ' Ironman'
-        case 'MEMD':
-            text += ' <:one_ring:1061898681504251954>'
-        case 'DRDX':
-            text += ' <:diabloico:760201452957335552> X'
-        case 'DWKD':
-            text += ' <:mod_wkd:1097321063077122068> modDiablo'
-        case 'HWKD':
-            text += ' <:mod_wkd:1097321063077122068> modHellfire'
-        case _:
-            text += ' ' + game['type']
+async def format_game(game):
+    embed = {
+        "type": "rich",
+        "title": game['id'].upper(),
+        "description": "",
+        "color": 0x00ff00,
+        "fields": [],
+        "thumbnail": {
+            "url": "",
+            "height": 0,
+            "width": 0
+        },
+        "author": {
+            "name": f"DevilutionX {game['version']}"
+        },
+        "footer": {
+            "text": f"Duration: {format_time_delta(round((time.time() - game['first_seen']) / 60))}"
+        }
+    }
 
-    text += ' ' + game['version']
+    # Checking if the game is ended to adjust border color
+    if time.time() - game['last_seen'] >= gameTTL:
+        embed["color"] = 0xff0000  # red for closed games
 
-    match game['tick_rate']:
-        case 20:
-            text += ''
-        case 30:
-            text += ' Fast'
-        case 40:
-            text += ' Faster'
-        case 50:
-            text += ' Fastest'
-        case _:
-            text += ' speed: ' + str(game['tick_rate'])
+    # Players
+    embed["fields"].append({
+        "name": "Players",
+        "value": ', '.join([name for name in game['players']]),
+        "inline": True
+    })
 
-    match game['difficulty']:
-        case 0:
-            text += ' Normal'
-        case 1:
-            text += ' Nightmare'
-        case 2:
-            text += ' Hell'
+    # Difficulty
+    difficulties = ["Normal", "Nightmare", "Hell"]
+    embed["fields"].append({
+        "name": "Difficulty",
+        "value": difficulties[game['difficulty']],
+        "inline": True
+    })
 
+    # Game Speed
+    tick_rate_mapping = {
+        20: "Normal",
+        30: "Fast",
+        40: "Faster",
+        50: "Fastest"
+    }
+    speed = tick_rate_mapping.get(game['tick_rate'], f"Speed: {game['tick_rate']}")
+    embed["fields"].append({
+        "name": "Game Speed",
+        "value": speed,
+        "inline": True
+    })
+
+    # Game Options
+    diablo_game_codes = {'DRTL', 'DSHR', 'IRON', 'MEMD', 'DWKD', 'LTDR', 'LTDS'}
     attributes = []
     if game['run_in_town']:
         attributes.append('Run in Town')
     if game['full_quests']:
         attributes.append('Quests')
-    if game['theo_quest'] and game['type'] != 'DRTL':
+    if game['theo_quest'] and game['type'] not in diablo_game_codes:
         attributes.append('Theo Quest')
-    if game['cow_quest'] and game['type'] != 'DRTL':
+    if game['cow_quest'] and game['type'] not in diablo_game_codes:
         attributes.append('Cow Quest')
     if game['friendly_fire']:
         attributes.append('Friendly Fire')
 
-    if len(attributes) != 0:
-        text += ' ('
-        text += ', '.join(attributes)
-        text += ')'
+    if attributes:
+        embed["fields"].append({
+            "name": "Game Options",
+            "value": ', '.join(attributes),
+            "inline": True
+        })
 
-    text += '\nPlayers: **' + '**, **'.join([escape_discord_formatting_characters(name) for name in game['players']]) + '**'
-    text += '\nStarted: <t:' + str(round(game['first_seen'])) + ':R>'
-    if ended:
-        text += '\nEnded after: `' + format_time_delta(round((time.time() - game['first_seen']) / 60)) + '`'
+    # Thumbnail based on game type
+    game_type_icons = {
+        'DRTL': 'URL',  # DevilutionX Diablo Retail
+        'DSHR': 'URL',  # DevilutionX Diablo Shareware
+        'HRTL': 'URL',  # DevilutionX Hellfire Retail
+        'HSHR': 'URL',  # DevilutionX Hellfire Shareware
+        'IRON': 'URL',  # Ironman Diablo Retail (Sixcy)
+        'MEMD': 'URL',  # Middle Earth Diablo Retail (DakkJaniels)
+        'DRDX': 'URL',  # DiabloX Diablo Retail (ikonomov)
+        'DWKD': 'URL',  # wkdmod Diablo Retail (wkdgmr)
+        'HWKD': 'URL',  # wkdmod Hellfire Retail (wkdgmr)
+        'LTDR': 'URL',  # Lord of Terror Diablo Retail (kphoenix)
+        'LTDS': 'URL',  # Lord of Terror Diablo Shareware (kphoenix)
+        'LTHR': 'URL',  # Lord of Terror Hellfire Retail (kphoenix)
+        'LTHS': 'URL',  # Lord of Terror Hellfire Shareware (kphoenix)
+    }
+    embed["thumbnail"]["url"] = game_type_icons.get(game['type'], "")
 
-    return text
+    return embed
 
 
 async def update_status_message():
