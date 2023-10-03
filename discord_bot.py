@@ -53,7 +53,7 @@ def format_game(game):
     embed["fields"].append({
         "name": "Players",
         "value": ', '.join([name for name in game['players']]),
-        "inline": True
+        "inline": False
     })
 
     # Difficulty
@@ -73,7 +73,7 @@ def format_game(game):
     }
     speed = tick_rate_mapping.get(game['tick_rate'], f"Speed: {game['tick_rate']}")
     embed["fields"].append({
-        "name": "Game Speed",
+        "name": "Speed",
         "value": speed,
         "inline": True
     })
@@ -96,7 +96,7 @@ def format_game(game):
         embed["fields"].append({
             "name": "Game Options",
             "value": ', '.join(attributes),
-            "inline": True
+            "inline": False
         })
 
     # Thumbnail based on game type
