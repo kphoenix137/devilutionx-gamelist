@@ -156,8 +156,10 @@ def format_time_delta(minutes):
 
 async def end_game_message(game_id):
     if 'message' in game_list[game_id]:
+        embed_data = format_game(game_list[game_id])
+        embed = discord.Embed.from_dict(embed_data)
         try:
-            await game_list[game_id]['message'].edit(content=format_game(game_list[game_id]))
+            await game_list[game_id]['message'].edit(embed=embed)
         except discord.errors.NotFound:
             pass
 
