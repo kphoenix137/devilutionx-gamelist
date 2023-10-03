@@ -36,9 +36,6 @@ def format_game(game):
             "height": 0,
             "width": 0
         },
-        "author": {
-            "name": f"DevilutionX {game['version']}"
-        },
         "footer": {
             "text": f"Duration: {format_time_delta(round((time.time() - game['first_seen']) / 60))}"
         }
@@ -48,6 +45,26 @@ def format_game(game):
     if time.time() - game['last_seen'] >= gameTTL:
         embed["color"] = 0xff0000  # red for closed games
         embed["title"] = "Game Closed"
+
+    # Mapping 4-letter code to game title
+    game_titles = {
+        'DRTL': 'DevilutionX',
+        'DSHR': 'DevilutionX',
+        'HRTL': 'DevilutionX',
+        'HSHR': 'DevilutionX',
+        'IRON': 'Ironman',
+        'MEMD': 'Middle Earth',
+        'DRDX': 'DiabloX',
+        'DWKD': 'wkdmod',
+        'HWKD': 'wkdmod',
+        'LTDR': 'Lord of Terror',
+        'LTDS': 'Lord of Terror',
+        'LTHR': 'Lord of Terror',
+        'LTHS': 'Lord of Terror'
+    }
+
+    # Setting the author field to game title with version
+    embed["author"]["name"] = f"{game_titles.get(game['type'], 'Unknown Game')} {game['version']}"
 
     # Players
     embed["fields"].append({
