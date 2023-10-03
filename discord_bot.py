@@ -99,21 +99,41 @@ def format_game(game):
             "inline": False
         })
 
+    diablo_retail_url = 'https://user-images.githubusercontent.com/68359262/272125642-d3363701-9b6e-4eff-b43e-11b9a0b58813.png'
+    diablo_shareware_url = 'https://user-images.githubusercontent.com/68359262/272125649-076eb58c-f587-4b16-822f-7d9b56559c69.png'
+    hellfire_retail_url = 'https://user-images.githubusercontent.com/68359262/272125658-3fc00693-e6dc-4273-81e8-803dbf9f5d93.png'
+    hellfire_shareware_url = 'https://user-images.githubusercontent.com/68359262/272125665-17805298-1400-49aa-a6a3-ac80ba5767ee.png'
     # Thumbnail based on game type
     game_type_icons = {
-        'DRTL': 'URL',  # DevilutionX Diablo Retail
-        'DSHR': 'URL',  # DevilutionX Diablo Shareware
-        'HRTL': 'URL',  # DevilutionX Hellfire Retail
-        'HSHR': 'URL',  # DevilutionX Hellfire Shareware
-        'IRON': 'URL',  # Ironman Diablo Retail (Sixcy)
-        'MEMD': 'URL',  # Middle Earth Diablo Retail (DakkJaniels)
-        'DRDX': 'URL',  # DiabloX Diablo Retail (ikonomov)
-        'DWKD': 'URL',  # wkdmod Diablo Retail (wkdgmr)
-        'HWKD': 'URL',  # wkdmod Hellfire Retail (wkdgmr)
-        'LTDR': 'URL',  # Lord of Terror Diablo Retail (kphoenix)
-        'LTDS': 'URL',  # Lord of Terror Diablo Shareware (kphoenix)
-        'LTHR': 'URL',  # Lord of Terror Hellfire Retail (kphoenix)
-        'LTHS': 'URL',  # Lord of Terror Hellfire Shareware (kphoenix)
+        'DRTL': diablo_retail_url,  # DevilutionX Diablo Retail
+        'DSHR': diablo_shareware_url,  # DevilutionX Diablo Shareware
+        'HRTL': hellfire_retail_url,  # DevilutionX Hellfire Retail
+        'HSHR': hellfire_shareware_url,  # DevilutionX Hellfire Shareware
+
+        'IRON': diablo_retail_url,  # Ironman Diablo Retail (Sixcy)
+        # MISSING: Ironman Diablo Shareware (Sixcy)
+        # MISSING: Ironman Hellfire Retail (Sixcy)
+        # MISSING: Ironman Hellfire Shareware (Sixcy)
+
+        'MEMD': diablo_retail_url,  # Middle Earth Diablo Retail (DakkJaniels)
+        # MISSING: Middle Earth Diablo Shareware (DakkJaniels)
+        # MISSING: Middle Earth Hellfire Retail (DakkJaniels)
+        # MISSING: Middle Earth Hellfire Shareware (DakkJaniels)
+
+        'DRDX': diablo_retail_url,  # DiabloX Diablo Retail (ikonomov)
+        # MISSING: DiabloX Diablo Shareware (ikonomov)
+        # MISSING: DiabloX Hellfire Retail (ikonomov)
+        # MISSING: DiabloX Hellfire Shareware (ikonomov)
+
+        'DWKD': diablo_retail_url,  # wkdmod Diablo Retail (wkdgmr)
+        # MISSING: wkdmod Diablo Shareware (wkdgmr)
+        'HWKD': hellfire_retail_url,  # wkdmod Hellfire Retail (wkdgmr)
+        # MISSING: wkdmod Hellfire Shareware (wkdgmr)
+
+        'LTDR': diablo_retail_url,  # Lord of Terror Diablo Retail (kphoenix)
+        'LTDS': diablo_shareware_url,  # Lord of Terror Diablo Shareware (kphoenix)
+        'LTHR': hellfire_retail_url,  # Lord of Terror Hellfire Retail (kphoenix)
+        'LTHS': hellfire_shareware_url,  # Lord of Terror Hellfire Shareware (kphoenix)
     }
     embed["thumbnail"]["url"] = game_type_icons.get(game['type'], "")
 
