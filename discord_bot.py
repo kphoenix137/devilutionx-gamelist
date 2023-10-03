@@ -90,7 +90,7 @@ def format_game(game):
         40: "Faster",
         50: "Fastest"
     }
-    speed = tick_rate_mapping.get(game['tick_rate'], f"Unknown ({game['tick_rate']})")
+    speed = tick_rate_mapping.get(game['tick_rate'], f"Custom ({game['tick_rate']})")
     embed["fields"].append({
         "name": "Speed",
         "value": speed,
