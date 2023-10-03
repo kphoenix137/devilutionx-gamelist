@@ -75,9 +75,11 @@ def format_game(game):
 
     # Difficulty
     difficulties = ["Normal", "Nightmare", "Hell"]
+    difficulty_value = difficulties[game['difficulty']] if 0 <= game['difficulty'] < len(
+        difficulties) else "Unknown"
     embed["fields"].append({
         "name": "Difficulty",
-        "value": difficulties[game['difficulty']],
+        "value": difficulty_value,
         "inline": True
     })
 
@@ -88,7 +90,7 @@ def format_game(game):
         40: "Faster",
         50: "Fastest"
     }
-    speed = tick_rate_mapping.get(game['tick_rate'], f"Speed: {game['tick_rate']}")
+    speed = tick_rate_mapping.get(game['tick_rate'], f"Unknown ({game['tick_rate']})")
     embed["fields"].append({
         "name": "Speed",
         "value": speed,
