@@ -47,6 +47,7 @@ def format_game(game):
     # Checking if the game is ended to adjust border color
     if time.time() - game['last_seen'] >= gameTTL:
         embed["color"] = 0xff0000  # red for closed games
+        embed["title"] = "Game Closed"
 
     # Players
     embed["fields"].append({
