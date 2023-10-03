@@ -133,9 +133,6 @@ def format_game(game):
         # MISSING: Ironman Hellfire Shareware (Sixcy)
 
         'MEMD': diablo_retail_url,  # Middle Earth Diablo Retail (DakkJaniels)
-        # MISSING: Middle Earth Diablo Shareware (DakkJaniels)
-        # MISSING: Middle Earth Hellfire Retail (DakkJaniels)
-        # MISSING: Middle Earth Hellfire Shareware (DakkJaniels)
 
         'DRDX': diablo_retail_url,  # DiabloX Diablo Retail (ikonomov)
         # MISSING: DiabloX Diablo Shareware (ikonomov)
