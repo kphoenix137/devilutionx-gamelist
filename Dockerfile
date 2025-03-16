@@ -41,4 +41,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8080
 
 # Set entrypoint to start both Flask and Discord bot
-CMD ["python3", "server.py"]
+CMD ["python3", "discord_bot.py"]
