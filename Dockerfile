@@ -34,8 +34,11 @@ COPY . .
 # Create build directory and compile C++ file
 RUN mkdir -p build && cd build && cmake .. && make -j$(nproc)
 
-# Install Python dependencies (if required for the bot)
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set entrypoint to execute the bot
-CMD ["python3", "discord_bot.py"]
+# Expose the required port for Flask (Cloud Run requires this)
+EXPOSE 8080
+
+# Set entrypoint to start both Flask and Discord bot
+CMD ["python3", "server.py"]
